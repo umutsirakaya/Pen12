@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center">
+                <h2 class="mb-0">🏆 Liderlik Tablosu 🏆</h2>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0 text-center align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col" style="width: 15%;">Sıra</th>
+                                <th scope="col" style="width: 40%;">Oyuncu</th>
+                                <th scope="col" style="width: 25%;">Tarih</th>
+                                <th scope="col" style="width: 20%;">Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in top_games %}
+                            <tr>
+                                <td>
+                                    {% if loop.index == 1 %}
+                                        <span class="badge rounded-pill bg-warning text-dark fs-6 py-2 px-3">🥇 1</span>
+                                    {% elif loop.index == 2 %}
+                                        <span class="badge rounded-pill bg-secondary fs-6 py-2 px-3">🥈 2</span>
+                                    {% elif loop.index == 3 %}
+                                        <span class="badge rounded-pill text-white fs-6 py-2 px-3" style="background-color: #cd7f32;">🥉 3</span>
+                                    {% else %}
+                                        <span class="fs-5 fw-bold text-muted">{{ loop.index }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fs-5 fw-semibold">{{ game.user.username }}</td>
+                                <td class="text-muted">{{ game.played_at.strftime('%Y-%m-%d') }}</td>
+                                <td><span class="badge bg-success fs-5">{{ game.total_score }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">
+                                    <p class="mb-0">Henüz oynanmış bir oyun bulunmuyor.</p>
+                                    <a href="{{ url_for('main.play') }}" class="btn btn-sm btn-primary mt-2">İlk Oynayan Sen Ol!</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

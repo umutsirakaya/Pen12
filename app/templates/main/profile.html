@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-12 text-center mb-4">
+        <h2 class="display-5 fw-bold text-dark">Profil ve İstatistikler</h2>
+        <p class="text-muted fs-5">Hoş geldin, {{ current_user.username }}!</p>
+    </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <!-- Toplam Oynanan Oyun Kartı -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 bg-primary text-white">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <h5 class="card-title text-uppercase fw-semibold mb-3" style="letter-spacing: 1px;">Oynanan Oyun</h5>
+                <p class="display-4 fw-bold mb-0">{{ total_games }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toplam Atılan Şut Kartı -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 bg-info text-white">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <h5 class="card-title text-uppercase fw-semibold mb-3" style="letter-spacing: 1px;">Atılan Şut</h5>
+                <p class="display-4 fw-bold mb-0">{{ total_shots }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toplam Gol Kartı -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 bg-success text-white">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <h5 class="card-title text-uppercase fw-semibold mb-3" style="letter-spacing: 1px;">Toplam Gol</h5>
+                <p class="display-4 fw-bold mb-0">{{ total_goals }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- İsabet Oranı Kartı -->
+    <div class="col-md-6 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 bg-warning text-dark">
+            <div class="card-body text-center d-flex flex-column justify-content-center">
+                <h5 class="card-title text-uppercase fw-semibold mb-3" style="letter-spacing: 1px;">İsabet Oranı</h5>
+                <p class="display-4 fw-bold mb-0">%{{ goal_ratio }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('main.play') }}" class="btn btn-lg btn-danger px-5 py-3 fw-bold shadow">
+            Yeni Oyuna Başla
+        </a>
+    </div>
+</div>
+{% endblock %}

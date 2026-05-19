@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Penaltı Oyununa Hoşgeldiniz</h1>
+        <p class="col-md-8 mx-auto fs-4">Bu, 12 hedefli penaltı atışı simülasyon oyunudur. Şutlarınızı çekin ve skorunuzu yükseltin!</p>
+        {% if current_user.is_authenticated %}
+            <a class="btn btn-primary btn-lg" href="{{ url_for('main.play') }}" role="button">Oyuna Başla (Pen12)</a>
+        {% else %}
+            <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Giriş Yap</a>
+            <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.register') }}" role="button">Kayıt Ol</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
