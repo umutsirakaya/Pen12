@@ -3,8 +3,9 @@ from flask_login import login_user, logout_user, current_user
 import sqlalchemy as sa
 from app import db
 from app.auth import auth
-from app.auth.forms import LoginForm, RegisterForm
+from app.auth.forms import LoginForm, RegisterForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
+from app.auth.email import send_password_reset_email
 from urllib.parse import urlsplit
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -44,3 +45,32 @@ def logout():
     logout_user()
     flash('Başarıyla çıkış yaptınız.', 'info')
     return redirect(url_for('main.index'))
+
+@auth.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
+        if user:
+            send_password_reset_email(user)
+        flash('Şifre sıfırlama talimatları e-posta adresinize gönderildi. (Gelen kutunuzu veya spam klasörünüzü kontrol edin)', 'info')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password_request.html', title='Şifre Sıfırlama Talebi', form=form)
+
+@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        flash('Geçersiz veya süresi dolmuş bir token.', 'danger')
+        return redirect(url_for('main.index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Şifreniz başarıyla güncellendi.', 'success')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', title='Yeni Şifre Belirle', form=form)

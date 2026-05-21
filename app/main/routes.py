@@ -75,6 +75,8 @@ def shoot():
     
     if is_goal:
         active_game.total_score += 1
+    else:
+        active_game.total_score -= 5
         
     db.session.commit()
     

@@ -26,3 +26,17 @@ class LoginForm(FlaskForm):
     username = StringField('Kullanıcı Adı', validators=[DataRequired()])
     password = PasswordField('Şifre', validators=[DataRequired()])
     submit = SubmitField('Giriş Yap')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('E-posta', validators=[DataRequired(), Email()])
+    submit = SubmitField('Şifre Sıfırlama Linki Gönder')
+
+    def validate_email(self, email):
+        user = db.session.scalar(sa.select(User).where(User.email == email.data))
+        if user is None:
+            raise ValidationError('Bu e-posta adresiyle kayıtlı bir hesap bulunamadı.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Yeni Şifre', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Yeni Şifre (Tekrar)', validators=[DataRequired(), EqualTo('password', message='Şifreler eşleşmelidir.')])
+    submit = SubmitField('Şifreyi Sıfırla')
