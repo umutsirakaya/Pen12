@@ -1,138 +1,332 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    .stadium-bg {
-        background: radial-gradient(ellipse at bottom, #1a2a1a 0%, #050505 100%);
-        min-height: 80vh;
-        border-radius: 15px;
-        position: relative;
-        overflow: hidden;
-        padding-top: 20px;
-        box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
-        perspective: 1000px;
-    }
-    .stadium-bg::before {
-        content: '🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️ 🏟️ 👤 🗣️';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0.15;
-        font-size: 2.5rem;
-        line-height: 2;
-        word-break: break-all;
-        pointer-events: none;
-        z-index: 0;
-        text-align: center;
-        overflow: hidden;
-    }
-    .scoreboard {
-        background-color: #0a0a0a;
-        border: 4px solid #333;
-        color: #ff3333;
-        font-family: 'Courier New', Courier, monospace;
-        text-shadow: 0 0 10px #ff3333;
-        border-radius: 10px;
-    }
-    .goal-container-custom {
-        position: relative;
-        background-color: rgba(20, 120, 40, 0.9);
-        border: 20px solid #fff;
-        border-bottom: 2px solid #fff;
-        border-radius: 15px 15px 0 0;
-        /* Net pattern */
-        background-image: 
-            linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2)), 
-            linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2));
-        background-size: 30px 30px;
-        background-position: 0 0, 15px 15px;
-        box-shadow: inset 0 0 80px rgba(0,0,0,0.8);
-        transform: translateZ(-200px) scale(0.9);
-        z-index: 1;
-        transform-style: preserve-3d;
-    }
-    .goalkeeper {
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 5rem;
-        z-index: 2;
-        pointer-events: none;
-        filter: drop-shadow(0 10px 10px rgba(0,0,0,0.7));
-    }
-    .goal-grid {
-        position: relative;
-        z-index: 1; /* In front of goalkeeper */
-    }
-    .shooter {
-        font-size: 8rem;
-        position: absolute;
-        bottom: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        filter: drop-shadow(0 15px 10px rgba(0,0,0,0.6));
-        z-index: 10;
-        pointer-events: none;
-    }
-    .shot-taken {
-        opacity: 0.7;
-        pointer-events: none !important;
-    }
-    .neon-title {
-        color: #fff;
-        text-shadow: 0 0 10px #fff, 0 0 20px #0fa, 0 0 30px #0fa;
-    }
-</style>
-<div class="container py-5 stadium-bg">
+<link href="{{ url_for('static', filename='style.css', v='1.0.4') }}" rel="stylesheet">
+<div class="stadium-lights-global">
+    <div class="stadium-beam left"></div>
+    <div class="stadium-beam right"></div>
+</div>
 
+<!-- Floating Navigation HUD for immersive play -->
+<div class="game-hud-nav">
+    <a href="{{ url_for('main.index') }}" class="hud-link">🏠 Ana Sayfa</a>
+    <a href="{{ url_for('main.leaderboard') }}" class="hud-link">🏆 Liderler</a>
+    <a href="{{ url_for('main.profile') }}" class="hud-link">👤 Profil</a>
+</div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h2 class="mb-4 neon-title">Pen12: Hedefini Seç!</h2>
-            <div class="d-flex justify-content-between align-items-center mb-4 px-4 py-3 scoreboard shadow-lg">
-                <h4 class="m-0 fw-bold">SKOR: <span id="current-score" class="text-warning fs-3">{{ game.total_score
-                        }}</span></h4>
-                <p class="m-0 text-success fw-bold" style="text-shadow: 0 0 5px #28a745;">BUGÜNKÜ OYUN</p>
+<div class="stadium-container">
+    <!-- Sports Scoreboard (Neon Digital Display) -->
+    <div class="scoreboard-container">
+        <div class="scoreboard-header">SÜPER KUPA • NEON ARENA</div>
+        <div class="scoreboard-teams">
+            <div class="team-panel left">
+                <span class="team-badge fb">FB</span>
+                <span class="team-name">Fenerbahçe</span>
+            </div>
+            <div class="score-display">
+                <span id="fb-score">0</span> - <span id="gs-score">0</span>
+            </div>
+            <div class="team-panel right">
+                <span class="team-name">Galatasaray</span>
+                <span class="team-badge gs">GS</span>
+            </div>
+        </div>
+        
+        <!-- Attempts Dot Tracker -->
+        <div class="attempts-tracker">
+            <div class="attempts-row">
+                <span class="attempts-label">FB</span>
+                <div class="dots-container" id="fb-dots">
+                    <!-- Dots populated dynamically by JS -->
+                </div>
+            </div>
+            <div class="attempts-row">
+                <span class="attempts-label">GS</span>
+                <div class="dots-container" id="gs-dots">
+                    <!-- Dots populated dynamically by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scoreboard Footer for Overall Points and Reset Button -->
+        <div class="scoreboard-footer">
+            <div class="scoreboard-total">
+                TOPLAM PUAN: <span id="current-score" class="score-val">{{ game.total_score }}</span>
+            </div>
+            <button type="button" id="reset-game-btn" class="neon-reset-btn">YENİ MAÇ</button>
+        </div>
+    </div>
+
+    <!-- Match Status Bar -->
+    <div id="status-bar" class="status-bar">
+        Şut çekmek için kaleden bir hedef seçin!
+    </div>
+
+    <!-- 3D Stadium Field Container -->
+    <div class="stadium-bg mt-3">
+        <!-- Stadium Lights (Overlay inside container) -->
+        <div class="stadium-lights">
+            <div class="floodlight left"></div>
+            <div class="light-beam left"></div>
+            <div class="floodlight right"></div>
+            <div class="light-beam right"></div>
+        </div>
+
+        <!-- Crowd stands background noise simulated with dense emojis -->
+        <div class="crowd-container">
+            <div class="crowd-row row-1">👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌</div>
+            <div class="crowd-row row-2">🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥🙌👥</div>
+            <div class="crowd-row row-3">👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌👥👥🙌🙌</div>
+        </div>
+
+        <!-- Boundary wall & fence separating field from background -->
+        <div class="stadium-fence"></div>
+        <div class="stadium-wall"></div>
+
+        <!-- Pitch containing Goal, Striker, and Ball -->
+        <div class="pitch-container">
+            <div class="pitch">
+                <div class="pitch-lines">
+                    <div class="penalty-box"></div>
+                    <div class="goal-area"></div>
+                    <div class="penalty-arc"></div>
+                </div>
+                <div class="penalty-spot"></div>
             </div>
 
-            <div id="notification-area" class="alert d-none fw-bold" role="alert"></div>
-
-            <div class="goal-container-custom p-3 shadow-lg">
-                <div class="goalkeeper">🧍‍♂️🧤</div>
-                <div class="goal-grid d-grid gap-2"
-                    style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 100px);">
+            <!-- The 3D Goal -->
+            <div class="goal-container-custom shadow-lg">
+                <div class="goal-posts"></div>
+                <div class="goal-net" id="goal-net"></div>
+                
+                <!-- Goalkeeper inside goal -->
+                <div class="goalkeeper" id="goalkeeper">
+                    <span class="glove left-glove">🧤</span>
+                    <span class="gk-body">🧍‍♂️</span>
+                    <span class="glove right-glove">🧤</span>
+                </div>
+                
+                <!-- Invisible but hover-reactive shot zones -->
+                <div class="goal-grid">
                     {% for zone in range(1, 13) %}
-                    <button type="button" class="btn btn-outline-light w-100 h-100 fs-1 fw-bold shoot-btn"
-                        style="background-color: rgba(255,255,255,0.15); transition: all 0.2s;" data-zone="{{ zone }}">
-                        {{ zone }}
+                    <button type="button" class="shoot-btn" data-zone="{{ zone }}" id="zone-btn-{{ zone }}">
+                        <span class="zone-number">{{ zone }}</span>
                     </button>
                     {% endfor %}
                 </div>
             </div>
 
-            <div class="shooter">🏃‍♂️⚽</div>
+            <!-- Striker Jersey Customizer -->
+            <div class="jersey-customizer">
+                <span class="customizer-title">FORMA SEÇ</span>
+                <div class="customizer-options">
+                    <button type="button" class="customizer-btn fb-btn active" data-team="fb">FB</button>
+                    <button type="button" class="customizer-btn gs-btn" data-team="gs">GS</button>
+                </div>
+            </div>
+
+            <!-- Foreground Striker Jersey (Back-turned, number 10) -->
+            <div class="kicker-container" id="kicker">
+                <div class="striker-jersey jersey-fb">
+                    <span class="jersey-number">10</span>
+                </div>
+            </div>
+
+            <!-- Football Ball centered at penalty spot -->
+            <div class="game-ball" id="game-ball">⚽</div>
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Game State
+        const initialShots = [
+            {% for shot in game.shots %}
+            { is_goal: {{ 'true' if shot.is_goal else 'false' }}, zone: {{ shot.target_zone }} },
+            {% endfor %}
+        ];
+        const gameId = {{ game.id }};
+        
+        // Match state variables
+        const fbShots = [];
+        const gsShots = [];
+        
+        // Element references
         const shootBtns = document.querySelectorAll('.shoot-btn');
         const scoreElement = document.getElementById('current-score');
-        const notificationArea = document.getElementById('notification-area');
+        const statusBar = document.getElementById('status-bar');
+        const goalkeeper = document.getElementById('goalkeeper');
+        const gameBall = document.getElementById('game-ball');
+        const goalNet = document.getElementById('goal-net');
+        const kicker = document.getElementById('kicker');
+        
+        // Set deterministic GS shot outcome based on shot index
+        function getGSShotIsGoal(shotIndex, gid) {
+            // High quality hash function for GS outcomes (72% goal chance)
+            const hash = (gid * 47 + shotIndex * 83) % 100;
+            return hash < 72;
+        }
 
+        // Initialize UI from existing shots loaded from DB
+        function initGame() {
+            initialShots.forEach((shot, index) => {
+                // Add to FB shots
+                fbShots.push(shot.is_goal);
+                
+                // Construct corresponding deterministic GS shot
+                const gsGoal = getGSShotIsGoal(index, gameId);
+                gsShots.push(gsGoal);
+                
+                // Style clicked zone buttons
+                const btn = document.getElementById(`zone-btn-${shot.zone}`);
+                if (btn) {
+                    btn.classList.add('shot-taken');
+                    btn.disabled = true;
+                    if (shot.is_goal) {
+                        btn.classList.add('btn-goal');
+                        btn.querySelector('.zone-number').innerText = '⚽';
+                    } else {
+                        btn.classList.add('btn-miss');
+                        btn.querySelector('.zone-number').innerText = '❌';
+                    }
+                }
+            });
+            
+            updateScoreboard();
+            checkMatchOver(false);
+        }
+
+        // Render Scoreboard scoreboard panels and dots
+        function updateScoreboard() {
+            const totalFBGoals = fbShots.filter(x => x).length;
+            const totalGSGoals = gsShots.filter(x => x).length;
+            
+            document.getElementById('fb-score').innerText = totalFBGoals;
+            document.getElementById('gs-score').innerText = totalGSGoals;
+            
+            const fbDotsContainer = document.getElementById('fb-dots');
+            const gsDotsContainer = document.getElementById('gs-dots');
+            fbDotsContainer.innerHTML = '';
+            gsDotsContainer.innerHTML = '';
+            
+            // Draw at least 5 dots, or more if sudden death
+            const maxDots = Math.max(5, fbShots.length);
+            
+            for (let i = 0; i < maxDots; i++) {
+                // FB dots
+                const fbDot = document.createElement('div');
+                fbDot.className = 'attempt-dot';
+                if (i < fbShots.length) {
+                    fbDot.classList.add(fbShots[i] ? 'goal' : 'miss');
+                } else if (i === fbShots.length) {
+                    fbDot.classList.add('active');
+                }
+                fbDotsContainer.appendChild(fbDot);
+                
+                // GS dots
+                const gsDot = document.createElement('div');
+                gsDot.className = 'attempt-dot';
+                if (i < gsShots.length) {
+                    gsDot.classList.add(gsShots[i] ? 'goal' : 'miss');
+                } else if (i === gsShots.length && fbShots.length > gsShots.length) {
+                    gsDot.classList.add('active');
+                }
+                gsDotsContainer.appendChild(gsDot);
+            }
+        }
+
+        // Map zones to approximate dive categories
+        function getGKDiveClass(zone, isGoal) {
+            const leftZones = [1, 2, 5, 6, 9, 10];
+            const topZones = [1, 2, 3, 4];
+            
+            if (isGoal) {
+                // Goalkeeper dives the WRONG way
+                if (leftZones.includes(zone)) {
+                    return Math.random() < 0.5 ? 'dive-right' : 'dive-top-right';
+                } else {
+                    return Math.random() < 0.5 ? 'dive-left' : 'dive-top-left';
+                }
+            } else {
+                // Goalkeeper dives the CORRECT way to save
+                if (leftZones.includes(zone)) {
+                    if (topZones.includes(zone)) return 'dive-top-left';
+                    return 'dive-left';
+                } else {
+                    if (topZones.includes(zone)) return 'dive-top-right';
+                    return 'dive-right';
+                }
+            }
+        }
+
+        // Reset ball position without translation transition animation
+        function resetBall() {
+            gameBall.style.transition = 'none';
+            gameBall.style.transform = 'translate(-50%, 0) scale(1) rotate(0deg)';
+            gameBall.style.opacity = '0';
+            gameBall.offsetHeight; // force reflow
+            gameBall.style.transition = 'transform 0.7s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.3s ease';
+            gameBall.style.opacity = '1';
+        }
+
+        // Reset goalkeeper pose back to center
+        function resetGoalkeeper() {
+            goalkeeper.className = 'goalkeeper';
+        }
+
+        // Check if the match is decided
+        function checkMatchOver(showAnnounce = true) {
+            const fbGoals = fbShots.filter(x => x).length;
+            const gsGoals = gsShots.filter(x => x).length;
+            const totalShots = fbShots.length;
+            
+            // standard shootout details
+            if (totalShots >= 5) {
+                if (fbGoals > gsGoals) {
+                    if (showAnnounce) setStatusMessage("🏆 KAZANDIK! Maçı Fenerbahçe kazanıyor!", "status-success");
+                    disableAllInputs();
+                    return true;
+                } else if (gsGoals > fbGoals) {
+                    if (showAnnounce) setStatusMessage("😞 KAYBETTİK... Maçı Galatasaray kazanıyor.", "status-danger");
+                    disableAllInputs();
+                    return true;
+                } else if (totalShots > 5 && fbGoals === gsGoals) {
+                    // Sudden death continues if scores are equal
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function disableAllInputs() {
+            shootBtns.forEach(btn => {
+                btn.disabled = true;
+            });
+        }
+
+        function setStatusMessage(msg, className = "") {
+            statusBar.className = "status-bar " + className;
+            statusBar.innerText = msg;
+        }
+
+        // Execute striker's shot sequence
         shootBtns.forEach(btn => {
             btn.addEventListener('click', function () {
-                const zone = this.getAttribute('data-zone');
-
-                // Butonları geçici olarak devre dışı bırak
-                shootBtns.forEach(b => b.disabled = true);
-                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-
+                const zone = parseInt(this.getAttribute('data-zone'));
+                
+                // Disable inputs immediately during animation
+                disableAllInputs();
+                
+                // 1. Kick animation on striker jersey
+                kicker.classList.add('kick-action');
+                setTimeout(() => kicker.classList.remove('kick-action'), 300);
+                
+                // 2. Fetch result from backend
+                setStatusMessage("Şut çekiliyor...", "status-warning");
+                
                 fetch("{{ url_for('main.shoot') }}", {
                     method: "POST",
                     headers: {
@@ -140,58 +334,208 @@
                     },
                     body: JSON.stringify({ zone: zone })
                 })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 3. Animate ball flight
+                        const ballRect = gameBall.getBoundingClientRect();
+                        const btnRect = btn.getBoundingClientRect();
+                        
+                        const dX = (btnRect.left + btnRect.width/2) - (ballRect.left + ballRect.width/2);
+                        const dY = (btnRect.top + btnRect.height/2) - (ballRect.top + ballRect.height/2);
+                        
+                        gameBall.style.transform = `translate(calc(-50% + ${dX}px), ${dY}px) scale(0.32) rotate(720deg)`;
+                        
+                        // 4. Animate goalkeeper dive
+                        const gkClass = getGKDiveClass(zone, data.is_goal);
+                        goalkeeper.classList.add(gkClass);
+                        
+                        // 5. Resolve animation ends
+                        setTimeout(() => {
+                            // Update shot button state
+                            btn.classList.add('shot-taken');
+                            if (data.is_goal) {
+                                btn.classList.add('btn-goal');
+                                btn.querySelector('.zone-number').innerText = '⚽';
+                                setStatusMessage("GOOOLLL! Harika bir vuruş!", "status-success");
+                                // Shake net
+                                goalNet.classList.add('shake');
+                                setTimeout(() => goalNet.classList.remove('shake'), 400);
+                            } else {
+                                btn.classList.add('btn-miss');
+                                btn.querySelector('.zone-number').innerText = '❌';
+                                setStatusMessage("KAÇTI! Kaleci kurtardı!", "status-danger");
+                            }
+                            
+                            // Save state locally
+                            fbShots.push(data.is_goal);
+                            scoreElement.innerText = data.new_score;
+                            updateScoreboard();
+                            
+                            // Check if match decided immediately
+                            if (checkMatchOver()) {
+                                return;
+                            }
+                            
+                            // 6. GS Simulated Turn
+                            setTimeout(simulateGSTurn, 1600);
+                            
+                        }, 750);
+                    } else {
+                        alert('Hata: ' + data.message);
+                        resetBall();
+                        resetGoalkeeper();
+                        // Re-enable remaining buttons
+                        shootBtns.forEach(b => {
+                            if (!b.classList.contains('shot-taken')) b.disabled = false;
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Shot failed:", error);
+                    resetBall();
+                    resetGoalkeeper();
+                    shootBtns.forEach(b => {
+                        if (!b.classList.contains('shot-taken')) b.disabled = false;
+                    });
+                });
+            });
+        });
+
+        // Simulate opponent (Galatasaray) shot
+        function simulateGSTurn() {
+            // Reset stadium layout for opponent's shot
+            resetBall();
+            resetGoalkeeper();
+            updateScoreboard();
+            
+            setStatusMessage("GS Atış Yapıyor...", "status-warning");
+            
+            // After brief setup delay, kick the ball
+            setTimeout(() => {
+                const gsGoal = getGSShotIsGoal(gsShots.length, gameId);
+                
+                // Select a random targeted zone (1-12) for GS
+                const randomZone = Math.floor(Math.random() * 12) + 1;
+                const targetBtn = document.getElementById(`zone-btn-${randomZone}`);
+                
+                // Animate ball from kicker spot (as AI shot origin)
+                const ballRect = gameBall.getBoundingClientRect();
+                const btnRect = targetBtn.getBoundingClientRect();
+                
+                const dX = (btnRect.left + btnRect.width/2) - (ballRect.left + ballRect.width/2);
+                const dY = (btnRect.top + btnRect.height/2) - (ballRect.top + ballRect.height/2);
+                
+                gameBall.style.transform = `translate(calc(-50% + ${dX}px), ${dY}px) scale(0.32) rotate(720deg)`;
+                
+                // Animate goalie defense
+                // Note: For GS shot, the player's goalkeeper defend!
+                // So if gsGoal is true, our goalkeeper dives the WRONG way.
+                // If gsGoal is false, our goalkeeper dives the CORRECT way to SAVE!
+                const gkClass = getGKDiveClass(randomZone, gsGoal);
+                goalkeeper.classList.add(gkClass);
+                
+                setTimeout(() => {
+                    if (gsGoal) {
+                        setStatusMessage("GS GOL ATTI! Skor güncellendi.", "status-danger");
+                        goalNet.classList.add('shake');
+                        setTimeout(() => goalNet.classList.remove('shake'), 400);
+                    } else {
+                        setStatusMessage("GS KAÇIRDI! Kalecimiz topu kurtardı!", "status-success");
+                    }
+                    
+                    // Add result to GS track list
+                    gsShots.push(gsGoal);
+                    updateScoreboard();
+                    
+                    // Check if match decided
+                    if (checkMatchOver()) {
+                        return;
+                    }
+                    
+                    // Prepare next turn
+                    setTimeout(() => {
+                        resetBall();
+                        resetGoalkeeper();
+                        setStatusMessage("Sıra sende! Yeni bir hedef seç.");
+                        
+                        // Enable remaining active shoot buttons
+                        shootBtns.forEach(b => {
+                            if (!b.classList.contains('shot-taken')) b.disabled = false;
+                        });
+                    }, 1600);
+                    
+                }, 750);
+                
+            }, 800);
+        }
+        
+        // Striker Jersey Customizer Integration
+        const customizerBtns = document.querySelectorAll('.customizer-btn');
+        const strikerJersey = document.querySelector('.striker-jersey');
+        
+        // Load saved jersey preference or default to fb
+        const savedJersey = localStorage.getItem('selectedJersey') || 'fb';
+        customizerBtns.forEach(btn => {
+            if (btn.getAttribute('data-team') === savedJersey) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        if (strikerJersey) {
+            if (savedJersey === 'gs') {
+                strikerJersey.className = 'striker-jersey jersey-gs';
+            } else {
+                strikerJersey.className = 'striker-jersey jersey-fb';
+            }
+        }
+        
+        customizerBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                customizerBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const team = this.getAttribute('data-team');
+                localStorage.setItem('selectedJersey', team);
+                if (strikerJersey) {
+                    if (team === 'gs') {
+                        strikerJersey.className = 'striker-jersey jersey-gs';
+                    } else {
+                        strikerJersey.className = 'striker-jersey jersey-fb';
+                    }
+                }
+            });
+        });
+
+        // Reset Game Button Integration
+        const resetBtn = document.getElementById('reset-game-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Maçı sıfırlamak ve yeni bir maç başlatmak istediğinize emin misiniz?')) {
+                    fetch("{{ url_for('main.reset_game') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        }
+                    })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            scoreElement.innerText = data.new_score;
-                            
-                            // Tıklanan butonu kalıcı olarak işaretle
-                            this.setAttribute('data-shot', 'true');
-                            this.classList.add('shot-taken');
-                            this.classList.remove('btn-outline-light');
-
-                            notificationArea.classList.remove('d-none', 'alert-success', 'alert-danger');
-                            if (data.is_goal) {
-                                notificationArea.classList.add('alert-success');
-                                notificationArea.innerText = `GOOOLLL! Bölge ${data.zone} tam isabet!`;
-                                this.classList.add('btn-success');
-                                this.style.backgroundColor = "rgba(25, 135, 84, 0.9)"; // Yeşil
-                                this.innerHTML = '⚽';
-                            } else {
-                                notificationArea.classList.add('alert-danger');
-                                notificationArea.innerText = `KAÇTI! Puanın düştü. Bölge ${data.zone}.`;
-                                this.classList.add('btn-danger');
-                                this.style.backgroundColor = "rgba(220, 53, 69, 0.9)"; // Kırmızı
-                                this.innerHTML = '❌';
-                            }
-
-                            // Diğer (şut atılmamış) butonları tekrar aktif et
-                            shootBtns.forEach(b => {
-                                if (b.getAttribute('data-shot') !== 'true') {
-                                    b.disabled = false;
-                                }
-                            });
-
+                            window.location.reload();
                         } else {
-                            alert('Hata: ' + data.message);
-                            this.innerHTML = zone;
-                            shootBtns.forEach(b => {
-                                if (b.getAttribute('data-shot') !== 'true') {
-                                    b.disabled = false;
-                                }
-                            });
+                            alert('Sıfırlama hatası: ' + data.message);
                         }
                     })
                     .catch(error => {
-                        this.innerHTML = zone;
-                        shootBtns.forEach(b => {
-                            if (b.getAttribute('data-shot') !== 'true') {
-                                b.disabled = false;
-                            }
-                        });
+                        console.error("Reset failed:", error);
+                        alert('Bir hata oluştu.');
                     });
+                }
             });
-        });
+        }
+        
+        // Start Game
+        initGame();
     });
 </script>
 {% endblock %}

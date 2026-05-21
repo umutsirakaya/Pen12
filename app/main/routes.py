@@ -87,6 +87,28 @@ def shoot():
         'new_score': active_game.total_score
     })
 
+@main.route('/reset_game', methods=['POST'])
+@login_required
+def reset_game():
+    today = datetime.now(timezone.utc).date()
+    active_game = None
+    for game in current_user.games:
+        if game.played_at.date() == today:
+            active_game = game
+            break
+            
+    if active_game:
+        for shot in list(active_game.shots):
+            db.session.delete(shot)
+        active_game.total_score = 0
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Oyun başarıyla sıfırlandı.'})
+    else:
+        active_game = Game(user_id=current_user.id)
+        db.session.add(active_game)
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Yeni oyun başlatıldı.'})
+
 @main.route('/leaderboard')
 def leaderboard():
     # En yüksek skora sahip 10 oyunu kullanıcılarıyla birlikte çek
