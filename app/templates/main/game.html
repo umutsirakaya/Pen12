@@ -10,8 +10,12 @@
 <!-- Floating Navigation HUD for immersive play -->
 <div class="game-hud-nav">
     <a href="{{ url_for('main.index') }}" class="hud-link">🏠 Ana Sayfa</a>
+    <a href="{{ url_for('main.shop') }}" class="hud-link text-warning fw-bold">🛒 Market</a>
     <a href="{{ url_for('main.leaderboard') }}" class="hud-link">🏆 Liderler</a>
     <a href="{{ url_for('main.profile') }}" class="hud-link">👤 Profil</a>
+    <div class="hud-link text-warning font-monospace fw-bold shadow-sm animate-pulse" style="cursor: default; user-select: none;">
+        🪙 <span id="game-coins-val">{{ current_user.coins }}</span>
+    </div>
 </div>
 
 <div class="stadium-container">
@@ -97,13 +101,17 @@
             <!-- The 3D Goal -->
             <div class="goal-container-custom shadow-lg">
                 <div class="goal-posts"></div>
-                <div class="goal-net" id="goal-net"></div>
+                <div class="goal-net {{ current_user.equipped_decor | replace('_', '-') }}" id="goal-net"></div>
                 
                 <!-- Goalkeeper inside goal -->
                 <div class="goalkeeper" id="goalkeeper">
-                    <span class="glove left-glove">🧤</span>
+                    <span class="glove left-glove {{ current_user.equipped_glove | replace('_', '-') }}">
+                        {% if current_user.equipped_glove == 'glove_cyber' %}🤖{% elif current_user.equipped_glove == 'glove_fire' %}🔥{% else %}🧤{% endif %}
+                    </span>
                     <span class="gk-body">🧍‍♂️</span>
-                    <span class="glove right-glove">🧤</span>
+                    <span class="glove right-glove {{ current_user.equipped_glove | replace('_', '-') }}">
+                        {% if current_user.equipped_glove == 'glove_cyber' %}🤖{% elif current_user.equipped_glove == 'glove_fire' %}🔥{% else %}🧤{% endif %}
+                    </span>
                 </div>
                 
                 <!-- Invisible but hover-reactive shot zones -->
@@ -120,20 +128,42 @@
             <div class="jersey-customizer">
                 <span class="customizer-title">FORMA SEÇ</span>
                 <div class="customizer-options">
-                    <button type="button" class="customizer-btn fb-btn active" data-team="fb">FB</button>
-                    <button type="button" class="customizer-btn gs-btn" data-team="gs">GS</button>
+                    {% set unlocked_list = current_user.unlocked_items.split(',') %}
+                    {% if 'jersey_fb' in unlocked_list %}
+                    <button type="button" class="customizer-btn fb-btn {% if current_user.equipped_jersey == 'jersey_fb' %}active{% endif %}" data-team="fb">FB</button>
+                    {% endif %}
+                    {% if 'jersey_gs' in unlocked_list %}
+                    <button type="button" class="customizer-btn gs-btn {% if current_user.equipped_jersey == 'jersey_gs' %}active{% endif %}" data-team="gs">GS</button>
+                    {% endif %}
+                    {% if 'jersey_bjk' in unlocked_list %}
+                    <button type="button" class="customizer-btn bjk-btn {% if current_user.equipped_jersey == 'jersey_bjk' %}active{% endif %}" data-team="bjk">BJK</button>
+                    {% endif %}
+                    {% if 'jersey_ts' in unlocked_list %}
+                    <button type="button" class="customizer-btn ts-btn {% if current_user.equipped_jersey == 'jersey_ts' %}active{% endif %}" data-team="ts">TS</button>
+                    {% endif %}
+                    {% if 'jersey_rm' in unlocked_list %}
+                    <button type="button" class="customizer-btn rm-btn {% if current_user.equipped_jersey == 'jersey_rm' %}active{% endif %}" data-team="rm">RM</button>
+                    {% endif %}
+                    {% if 'jersey_barca' in unlocked_list %}
+                    <button type="button" class="customizer-btn barca-btn {% if current_user.equipped_jersey == 'jersey_barca' %}active{% endif %}" data-team="barca">BAR</button>
+                    {% endif %}
+                    {% if 'jersey_turkey' in unlocked_list %}
+                    <button type="button" class="customizer-btn turkey-btn {% if current_user.equipped_jersey == 'jersey_turkey' %}active{% endif %}" data-team="turkey">TR</button>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Foreground Striker Jersey (Back-turned, number 10) -->
             <div class="kicker-container" id="kicker">
-                <div class="striker-jersey jersey-fb">
+                <div class="striker-jersey jersey-{{ current_user.equipped_jersey | replace('jersey_', '') }}">
                     <span class="jersey-number">10</span>
                 </div>
             </div>
 
             <!-- Football Ball centered at penalty spot -->
-            <div class="game-ball" id="game-ball">⚽</div>
+            <div class="game-ball {{ current_user.equipped_ball | replace('_', '-') }}" id="game-ball">
+                {% if current_user.equipped_ball == 'ball_fire' %}☄️{% else %}⚽{% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -168,6 +198,23 @@
             // High quality hash function for GS outcomes (72% goal chance)
             const hash = (gid * 47 + shotIndex * 83) % 100;
             return hash < 72;
+        }
+
+        // Floating Coin pop animation
+        function triggerCoinPop() {
+            const pop = document.createElement('div');
+            pop.className = 'coin-pop-effect animate-pulse';
+            pop.innerText = '+10 🪙';
+            
+            const scoreVal = document.getElementById('current-score');
+            if (scoreVal) {
+                const rect = scoreVal.getBoundingClientRect();
+                pop.style.left = `${rect.left + rect.width / 2}px`;
+                pop.style.top = `${rect.top}px`;
+            }
+            
+            document.body.appendChild(pop);
+            setTimeout(() => pop.remove(), 1200);
         }
 
         // Initialize UI from existing shots loaded from DB
@@ -361,6 +408,11 @@
                                 // Shake net
                                 goalNet.classList.add('shake');
                                 setTimeout(() => goalNet.classList.remove('shake'), 400);
+                                
+                                // Coin reward popup & update hud
+                                triggerCoinPop();
+                                const coinsVal = document.getElementById('game-coins-val');
+                                if (coinsVal) coinsVal.innerText = data.total_coins;
                             } else {
                                 btn.classList.add('btn-miss');
                                 btn.querySelector('.zone-number').innerText = '❌';
@@ -474,36 +526,25 @@
         const customizerBtns = document.querySelectorAll('.customizer-btn');
         const strikerJersey = document.querySelector('.striker-jersey');
         
-        // Load saved jersey preference or default to fb
-        const savedJersey = localStorage.getItem('selectedJersey') || 'fb';
-        customizerBtns.forEach(btn => {
-            if (btn.getAttribute('data-team') === savedJersey) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        if (strikerJersey) {
-            if (savedJersey === 'gs') {
-                strikerJersey.className = 'striker-jersey jersey-gs';
-            } else {
-                strikerJersey.className = 'striker-jersey jersey-fb';
-            }
-        }
-        
         customizerBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 customizerBtns.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 const team = this.getAttribute('data-team');
-                localStorage.setItem('selectedJersey', team);
+                
                 if (strikerJersey) {
-                    if (team === 'gs') {
-                        strikerJersey.className = 'striker-jersey jersey-gs';
-                    } else {
-                        strikerJersey.className = 'striker-jersey jersey-fb';
-                    }
+                    strikerJersey.className = `striker-jersey jersey-${team}`;
                 }
+                
+                // Save to backend database
+                fetch("{{ url_for('main.equip_item') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ item_id: `jersey_${team}` })
+                })
+                .catch(err => console.error("Jersey equip sync failed:", err));
             });
         });
 

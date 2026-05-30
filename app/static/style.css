@@ -128,7 +128,8 @@ body:has(.stadium-container) {
 }
 
 body:has(.stadium-container) nav.navbar {
-    display: none !important; /* Fully hide main navbar on play page */
+    display: none !important;
+    /* Fully hide main navbar on play page */
 }
 
 body:has(.stadium-container) .container {
@@ -274,7 +275,7 @@ body:has(.stadium-container) .container {
     font-size: 1.4rem;
     font-weight: 900;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
     letter-spacing: 1px;
 }
 
@@ -361,12 +362,13 @@ body:has(.stadium-container) .container {
 }
 
 @keyframes pulse-active-neon {
-    from { 
-        box-shadow: 0 0 2px #ffd100; 
+    from {
+        box-shadow: 0 0 2px #ffd100;
         border-color: #ffd100;
     }
-    to { 
-        box-shadow: 0 0 12px #ffd100; 
+
+    to {
+        box-shadow: 0 0 12px #ffd100;
         border-color: #ffffff;
     }
 }
@@ -426,7 +428,7 @@ body:has(.stadium-container) .container {
     font-weight: 800;
     border-radius: 8px;
     font-size: 0.95rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     z-index: 10;
     position: relative;
 }
@@ -458,8 +460,8 @@ body:has(.stadium-container) .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0));
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0));
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));
 }
 
 .crowd-row {
@@ -474,35 +476,54 @@ body:has(.stadium-container) .container {
 .crowd-row.row-1 {
     animation: crowd-wave-1 4s ease-in-out infinite alternate;
 }
+
 .crowd-row.row-2 {
     animation: crowd-wave-2 4.5s ease-in-out infinite alternate;
     opacity: 0.85;
 }
+
 .crowd-row.row-3 {
     animation: crowd-wave-3 5s ease-in-out infinite alternate;
     opacity: 0.7;
 }
 
 @keyframes crowd-wave-1 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-5px) scale(1.02); }
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        transform: translateY(-5px) scale(1.02);
+    }
 }
+
 @keyframes crowd-wave-2 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(4px) scale(0.98); }
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        transform: translateY(4px) scale(0.98);
+    }
 }
+
 @keyframes crowd-wave-3 {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-3px) scale(1.01); }
+    0% {
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        transform: translateY(-3px) scale(1.01);
+    }
 }
 
 /* Stadium fence and boundary wall */
 .stadium-fence {
     width: 100%;
     height: 35px;
-    background: 
-        repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(222,255,154,0.04) 8px, rgba(222,255,154,0.04) 10px),
-        repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(222,255,154,0.04) 8px, rgba(222,255,154,0.04) 10px);
+    background:
+        repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(222, 255, 154, 0.04) 8px, rgba(222, 255, 154, 0.04) 10px),
+        repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(222, 255, 154, 0.04) 8px, rgba(222, 255, 154, 0.04) 10px);
     border-top: 3px solid #111;
     border-bottom: 2px solid #222;
     position: absolute;
@@ -537,18 +558,17 @@ body:has(.stadium-container) .container {
     left: -20%;
     width: 140%;
     height: 120%;
-    background: 
-        linear-gradient(to bottom, 
-            #0a200f 0%, #0a200f 8%, 
-            #0f2814 8%, #0f2814 16%, 
+    background:
+        linear-gradient(to bottom,
+            #0a200f 0%, #0a200f 8%,
+            #0f2814 8%, #0f2814 16%,
             #081b0c 16%, #081b0c 25%,
-            #0d2512 25%, #0d2512 35%, 
+            #0d2512 25%, #0d2512 35%,
             #06170a 35%, #06170a 46%,
             #0b2110 46%, #0b2110 58%,
             #041208 58%, #041208 71%,
             #091d0e 71%, #091d0e 85%,
-            #020b04 85%, #020b04 100%
-        );
+            #020b04 85%, #020b04 100%);
     transform: rotateX(62deg);
     transform-origin: top center;
     border-top: 6px solid #113619;
@@ -657,7 +677,7 @@ body:has(.stadium-container) .container {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
+    background-image:
         linear-gradient(0deg, rgba(222, 255, 154, 0.12) 1px, transparent 1px),
         linear-gradient(90deg, rgba(222, 255, 154, 0.12) 1px, transparent 1px);
     background-size: 15px 15px;
@@ -672,13 +692,33 @@ body:has(.stadium-container) .container {
 }
 
 @keyframes net-shake {
-    0% { transform: scale(1) translateZ(-60px) translate(0, 0); }
-    15% { transform: scale(1.01) translateZ(-60px) translate(-3px, -4px); }
-    30% { transform: scale(0.99) translateZ(-60px) translate(4px, 2px); }
-    45% { transform: scale(1.006) translateZ(-60px) translate(-2px, 3px); }
-    60% { transform: scale(0.994) translateZ(-60px) translate(3px, -1px); }
-    75% { transform: scale(1.002) translateZ(-60px) translate(-1px, -1px); }
-    100% { transform: scale(1) translateZ(-60px) translate(0, 0); }
+    0% {
+        transform: scale(1) translateZ(-60px) translate(0, 0);
+    }
+
+    15% {
+        transform: scale(1.01) translateZ(-60px) translate(-3px, -4px);
+    }
+
+    30% {
+        transform: scale(0.99) translateZ(-60px) translate(4px, 2px);
+    }
+
+    45% {
+        transform: scale(1.006) translateZ(-60px) translate(-2px, 3px);
+    }
+
+    60% {
+        transform: scale(0.994) translateZ(-60px) translate(3px, -1px);
+    }
+
+    75% {
+        transform: scale(1.002) translateZ(-60px) translate(-1px, -1px);
+    }
+
+    100% {
+        transform: scale(1) translateZ(-60px) translate(0, 0);
+    }
 }
 
 /* Goalkeeper Style and Animations */
@@ -702,7 +742,7 @@ body:has(.stadium-container) .container {
     font-size: 4.2rem;
     line-height: 1;
     z-index: 2;
-    filter: drop-shadow(0 8px 10px rgba(0,0,0,0.8));
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.8));
     user-select: none;
 }
 
@@ -711,7 +751,7 @@ body:has(.stadium-container) .container {
     font-size: 2.2rem;
     z-index: 3;
     transition: all 0.3s ease;
-    filter: drop-shadow(0 6px 8px rgba(0,0,0,0.7));
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.7));
     user-select: none;
 }
 
@@ -731,9 +771,11 @@ body:has(.stadium-container) .container {
 .goalkeeper.dive-left {
     transform: translateX(-50%) translate(-210px, -15px) rotate(-75deg);
 }
+
 .goalkeeper.dive-left .left-glove {
     transform: translate(-10px, -15px) rotate(-60deg) scale(1.2);
 }
+
 .goalkeeper.dive-left .right-glove {
     transform: translate(-5px, -5px) rotate(-45deg) scale(1.1);
 }
@@ -741,9 +783,11 @@ body:has(.stadium-container) .container {
 .goalkeeper.dive-right {
     transform: translateX(-50%) translate(210px, -15px) rotate(75deg);
 }
+
 .goalkeeper.dive-right .right-glove {
     transform: translate(10px, -15px) rotate(60deg) scale(1.2);
 }
+
 .goalkeeper.dive-right .left-glove {
     transform: translate(5px, -5px) rotate(45deg) scale(1.1);
 }
@@ -751,6 +795,7 @@ body:has(.stadium-container) .container {
 .goalkeeper.dive-top-left {
     transform: translateX(-50%) translate(-200px, -105px) rotate(-60deg);
 }
+
 .goalkeeper.dive-top-left .left-glove {
     transform: translate(-15px, -20px) rotate(-45deg) scale(1.3);
 }
@@ -758,6 +803,7 @@ body:has(.stadium-container) .container {
 .goalkeeper.dive-top-right {
     transform: translateX(-50%) translate(200px, -105px) rotate(60deg);
 }
+
 .goalkeeper.dive-top-right .right-glove {
     transform: translate(15px, -20px) rotate(45deg) scale(1.3);
 }
@@ -981,7 +1027,8 @@ body:has(.stadium-container) .container {
 }
 
 /* Sleeves for massive striker */
-.striker-jersey::before, .striker-jersey::after {
+.striker-jersey::before,
+.striker-jersey::after {
     content: '';
     position: absolute;
     width: 65px;
@@ -1040,6 +1087,421 @@ body:has(.stadium-container) .container {
     z-index: 11;
     transition: transform 0.75s cubic-bezier(0.1, 0.8, 0.3, 1);
     pointer-events: none;
-    filter: drop-shadow(0 15px 10px rgba(0,0,0,0.85));
+    filter: drop-shadow(0 15px 10px rgba(0, 0, 0, 0.85));
     user-select: none;
+}
+
+/* ========================================= */
+/* SHOP SYSTEM & ITEM STYLING */
+/* ========================================= */
+
+/* Custom Balls */
+.game-ball.ball-gold {
+    filter: drop-shadow(0 0 15px #ffd100) brightness(1.25);
+    color: #ffd100;
+}
+.game-ball.ball-neon {
+    filter: drop-shadow(0 0 15px #00f3ff) brightness(1.25);
+    color: #00f3ff;
+}
+.game-ball.ball-fire {
+    filter: drop-shadow(0 0 18px #ff4500) brightness(1.3) saturate(1.5);
+    animation: ball-flame-flicker 0.4s infinite alternate;
+}
+@keyframes ball-flame-flicker {
+    0% { filter: drop-shadow(0 0 15px #ff4500) brightness(1.2); }
+    100% { filter: drop-shadow(0 0 25px #ff8c00) brightness(1.4); }
+}
+
+/* Custom Gloves */
+.glove.glove-pink {
+    filter: hue-rotate(140deg) brightness(1.3) drop-shadow(0 0 8px #ff007f);
+}
+.glove.glove-cyber {
+    filter: drop-shadow(0 0 8px #00f0ff);
+}
+.glove.glove-fire {
+    filter: saturate(5) hue-rotate(-30deg) drop-shadow(0 0 8px #ff4500);
+    animation: flame-glove 0.5s infinite alternate;
+}
+@keyframes flame-glove {
+    0% { transform: scale(1); filter: saturate(5) hue-rotate(-30deg) drop-shadow(0 0 6px #ff4500); }
+    100% { transform: scale(1.1); filter: saturate(6) hue-rotate(-20deg) drop-shadow(0 0 12px #ff8c00); }
+}
+
+/* Custom Goal Nets */
+.goal-net.decor-gold {
+    background-image:
+        linear-gradient(0deg, rgba(255, 209, 0, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 209, 0, 0.22) 1px, transparent 1px);
+    box-shadow: inset 0 0 45px rgba(255, 209, 0, 0.35);
+    border-color: #ffd100;
+}
+.goal-net.decor-neon {
+    background-image:
+        linear-gradient(0deg, rgba(0, 243, 255, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 127, 0.18) 1px, transparent 1px);
+    box-shadow: inset 0 0 40px rgba(0, 243, 255, 0.25);
+    animation: neon-net-pulse 2.5s infinite alternate;
+}
+@keyframes neon-net-pulse {
+    0% {
+        box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.2);
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        box-shadow: inset 0 0 50px rgba(255, 0, 127, 0.4);
+        filter: hue-rotate(180deg);
+    }
+}
+.goal-net.decor-spider {
+    background-image: 
+        radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.06) 31%, transparent 31%),
+        repeating-linear-gradient(0deg, transparent, transparent 14px, rgba(255,255,255,0.07) 14px, rgba(255,255,255,0.07) 15px),
+        repeating-linear-gradient(90deg, transparent, transparent 14px, rgba(255,255,255,0.07) 14px, rgba(255,255,255,0.07) 15px),
+        linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.08) 49%, rgba(255,255,255,0.08) 51%, transparent 52%),
+        linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.08) 49%, rgba(255,255,255,0.08) 51%, transparent 52%);
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.95);
+}
+
+/* Custom Jerseys */
+/* Beşiktaş */
+.striker-jersey.jersey-bjk {
+    background: linear-gradient(90deg, #111 0%, #111 33%, #eee 33%, #eee 66%, #111 66%, #111 100%);
+    border-top: 15px solid #ffffff;
+}
+.striker-jersey.jersey-bjk .jersey-number {
+    color: #111;
+    text-shadow: 0 0 10px rgba(255,255,255,0.9);
+}
+.striker-jersey.jersey-bjk::before, .striker-jersey.jersey-bjk::after {
+    background: #111;
+    border-left: 6px solid #fff;
+    border-right: 6px solid #fff;
+}
+/* Trabzonspor */
+.striker-jersey.jersey-ts {
+    background: linear-gradient(90deg, #8b0000 0%, #8b0000 50%, #4a90e2 50%, #4a90e2 100%);
+    border-top: 15px solid #4a90e2;
+}
+.striker-jersey.jersey-ts .jersey-number {
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(74, 144, 226, 0.8);
+}
+.striker-jersey.jersey-ts::before {
+    background: #8b0000;
+    border-left: 6px solid #4a90e2;
+}
+.striker-jersey.jersey-ts::after {
+    background: #4a90e2;
+    border-right: 6px solid #8b0000;
+}
+/* Real Madrid */
+.striker-jersey.jersey-rm {
+    background: linear-gradient(180deg, #ffffff 0%, #eeeeee 100%);
+    border-top: 15px solid #c5a059;
+}
+.striker-jersey.jersey-rm .jersey-number {
+    color: #c5a059;
+    text-shadow: 0 0 12px rgba(197, 160, 89, 0.5);
+}
+.striker-jersey.jersey-rm::before, .striker-jersey.jersey-rm::after {
+    background: #ffffff;
+    border-left: 6px solid #c5a059;
+    border-right: 6px solid #c5a059;
+}
+/* Barcelona */
+.striker-jersey.jersey-barca {
+    background: linear-gradient(90deg, #a50044 0%, #a50044 33%, #004d98 33%, #004d98 66%, #a50044 66%, #a50044 100%);
+    border-top: 15px solid #edbb00;
+}
+.striker-jersey.jersey-barca .jersey-number {
+    color: #edbb00;
+    text-shadow: 0 0 12px rgba(237, 187, 0, 0.7);
+}
+.striker-jersey.jersey-barca::before {
+    background: #a50044;
+    border-left: 6px solid #edbb00;
+}
+.striker-jersey.jersey-barca::after {
+    background: #004d98;
+    border-right: 6px solid #edbb00;
+}
+/* Turkey */
+.striker-jersey.jersey-turkey {
+    background: linear-gradient(180deg, #e30a17 0%, #b30812 100%);
+    border-top: 15px solid #ffffff;
+}
+.striker-jersey.jersey-turkey .jersey-number {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+.striker-jersey.jersey-turkey::before, .striker-jersey.jersey-turkey::after {
+    background: #e30a17;
+    border-left: 6px solid #ffffff;
+    border-right: 6px solid #ffffff;
+}
+
+/* Jersey Customizer Button Colors */
+.customizer-btn.bjk-btn {
+    background: #111;
+    border-color: #fff;
+}
+.customizer-btn.ts-btn {
+    background: #8b0000;
+    border-color: #4a90e2;
+}
+.customizer-btn.rm-btn {
+    background: #ffffff;
+    border-color: #c5a059;
+    color: #000;
+}
+.customizer-btn.barca-btn {
+    background: #004d98;
+    border-color: #a50044;
+}
+.customizer-btn.turkey-btn {
+    background: #e30a17;
+    border-color: #fff;
+}
+
+/* Coin Pop Floating Text Effect */
+.coin-pop-effect {
+    position: fixed;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #ffd100;
+    text-shadow: 0 0 15px rgba(255, 209, 0, 0.8);
+    pointer-events: none;
+    z-index: 9999;
+    animation: coin-float-up-anim 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes coin-float-up-anim {
+    0% {
+        transform: translate(-50%, 0) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -25px) scale(1.3);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -100px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* MARKET (SHOP) LAYOUT */
+.shop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.shop-title {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--accent-color);
+    text-shadow: 0 0 20px rgba(222, 255, 154, 0.5);
+}
+.shop-subtitle {
+    color: #a0aec0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.shop-balance {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(222, 255, 154, 0.08);
+    border: 2px solid var(--accent-color);
+    padding: 10px 30px;
+    border-radius: 40px;
+    box-shadow: 0 0 15px rgba(222, 255, 154, 0.2);
+}
+.coin-icon {
+    font-size: 1.8rem;
+}
+.balance-amount {
+    font-family: monospace;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent-color);
+    text-shadow: 0 0 8px rgba(222, 255, 154, 0.5);
+}
+.balance-label {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #f8fafc;
+    letter-spacing: 1px;
+}
+
+/* Shop Category Tabs */
+.shop-tabs {
+    border-bottom: 2px solid var(--border-color);
+}
+.shop-tabs .nav-link {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #a0aec0 !important;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 25px;
+    background: transparent !important;
+    transition: all 0.3s ease;
+}
+.shop-tabs .nav-link:hover {
+    color: var(--accent-color) !important;
+    border-bottom-color: rgba(222, 255, 154, 0.3);
+}
+.shop-tabs .nav-link.active {
+    color: var(--accent-color) !important;
+    border-bottom-color: var(--accent-color) !important;
+    text-shadow: 0 0 10px rgba(222, 255, 154, 0.4);
+}
+
+/* Shop Items Cards Grid */
+.shop-card {
+    background: rgba(10, 10, 10, 0.8) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shop-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 12px 30px rgba(222, 255, 154, 0.15) !important;
+}
+.shop-card.equipped-border {
+    border: 2px solid var(--accent-color) !important;
+    box-shadow: 0 0 20px rgba(222, 255, 154, 0.25) !important;
+}
+.shop-item-preview {
+    height: 180px;
+    background: radial-gradient(circle, rgba(20, 20, 20, 0.9) 0%, rgba(5, 5, 5, 0.95) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+/* Card previews glowing gradients */
+.shop-item-preview.ball-gold {
+    background: radial-gradient(circle, rgba(255, 209, 0, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.ball-gold .shop-item-emoji {
+    filter: drop-shadow(0 0 15px #ffd100);
+}
+.shop-item-preview.ball-neon {
+    background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.ball-neon .shop-item-emoji {
+    filter: drop-shadow(0 0 15px #00f3ff);
+}
+.shop-item-preview.ball-fire {
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.ball-fire .shop-item-emoji {
+    filter: drop-shadow(0 0 20px #ff4500);
+    animation: ball-flame-flicker 0.4s infinite alternate;
+}
+
+.shop-item-preview.glove-pink {
+    background: radial-gradient(circle, rgba(255, 0, 127, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.glove-pink .shop-item-emoji {
+    filter: hue-rotate(140deg) brightness(1.3) drop-shadow(0 0 8px #ff007f);
+}
+.shop-item-preview.glove-cyber {
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.glove-cyber .shop-item-emoji {
+    filter: drop-shadow(0 0 8px #00f0ff);
+}
+.shop-item-preview.glove-fire {
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.15) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.glove-fire .shop-item-emoji {
+    filter: saturate(5) hue-rotate(-30deg) drop-shadow(0 0 8px #ff4500);
+    animation: flame-glove 0.5s infinite alternate;
+}
+
+.shop-item-preview.decor-gold {
+    background: radial-gradient(circle, rgba(255, 209, 0, 0.12) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.decor-neon {
+    background: radial-gradient(circle, rgba(0, 243, 255, 0.12) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+.shop-item-preview.decor-spider {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(5, 5, 5, 0.95) 100%);
+}
+
+.shop-item-preview.jersey-fb { background: linear-gradient(135deg, #002d72 0%, #001e4e 100%); }
+.shop-item-preview.jersey-gs { background: linear-gradient(135deg, #a80018 0%, #7c0011 100%); }
+.shop-item-preview.jersey-bjk { background: linear-gradient(135deg, #111 0%, #000 100%); }
+.shop-item-preview.jersey-ts { background: linear-gradient(135deg, #8b0000 0%, #4a90e2 100%); }
+.shop-item-preview.jersey-rm { background: linear-gradient(135deg, #fff 0%, #eee 100%); }
+.shop-item-preview.jersey-barca { background: linear-gradient(135deg, #a50044 0%, #004d98 100%); }
+.shop-item-preview.jersey-turkey { background: linear-gradient(135deg, #e30a17 0%, #b30812 100%); }
+
+.shop-item-emoji {
+    font-size: 3.8rem;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+.shop-card:hover .shop-item-emoji {
+    transform: scale(1.12) rotate(5deg);
+}
+.item-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.item-desc {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    line-height: 1.4;
+}
+.action-btn {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+.equipped-btn {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+    color: #000000 !important;
+    box-shadow: 0 0 10px rgba(222, 255, 154, 0.4);
+}
+.equip-btn:hover {
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+.buy-btn {
+    background-color: #ffd100 !important;
+    border-color: #ffd100 !important;
+    color: #000000 !important;
+    font-weight: 900;
+}
+.buy-btn:hover {
+    background-color: #ffde43 !important;
+    border-color: #ffde43 !important;
+    box-shadow: 0 0 15px rgba(255, 209, 0, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Animations pulse for indicators */
+.animate-pulse {
+    animation: pulse-hud 1.5s infinite alternate;
+}
+@keyframes pulse-hud {
+    from { transform: scale(1); }
+    to { transform: scale(1.03); }
 }

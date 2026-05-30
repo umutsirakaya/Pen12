@@ -16,6 +16,13 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(256), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
+    
+    coins: Mapped[int] = mapped_column(Integer, default=100)
+    unlocked_items: Mapped[str] = mapped_column(String(500), default="ball_classic,jersey_fb,jersey_gs,decor_classic,glove_classic")
+    equipped_ball: Mapped[str] = mapped_column(String(50), default="ball_classic")
+    equipped_jersey: Mapped[str] = mapped_column(String(50), default="jersey_fb")
+    equipped_decor: Mapped[str] = mapped_column(String(50), default="decor_classic")
+    equipped_glove: Mapped[str] = mapped_column(String(50), default="glove_classic")
 
     games: Mapped[List["Game"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="{{ url_for('static', filename='style.css', v='1.0.4') }}" rel="stylesheet">
+
+<div class="shop-container py-5">
+    <div class="shop-header text-center mb-5">
+        <h1 class="shop-title">NEON ARENA MARKET</h1>
+        <p class="shop-subtitle">Kazandığın gol altınlarını harcayarak tarzını özelleştir!</p>
+        <div class="shop-balance mt-3">
+            <span class="coin-icon">🪙</span>
+            <span id="shop-coins-val" class="balance-amount">{{ coins }}</span>
+            <span class="balance-label">Altın</span>
+        </div>
+    </div>
+
+    <!-- Category Navigation Tabs -->
+    <ul class="nav nav-tabs shop-tabs justify-content-center mb-5" id="shopTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="ball-tab" data-bs-toggle="tab" data-bs-target="#ball-pane" type="button" role="tab">⚽ Toplar</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="jersey-tab" data-bs-toggle="tab" data-bs-target="#jersey-pane" type="button" role="tab">👕 Formalar</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="decor-tab" data-bs-toggle="tab" data-bs-target="#decor-pane" type="button" role="tab">🥅 Kale Dekorları</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="glove-tab" data-bs-toggle="tab" data-bs-target="#glove-pane" type="button" role="tab">🧤 Kaleci Eldivenleri</button>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="shopTabsContent">
+        {% for category, cat_items in items.items() %}
+        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ category }}-pane" role="tabpanel" tabindex="0">
+            <div class="row g-4">
+                {% for item in cat_items %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card shop-card h-100 {% if item.is_equipped %}equipped-border{% endif %}" id="card-{{ item.id }}">
+                        <div class="shop-item-preview {{ item.class }}">
+                            <span class="shop-item-emoji">{{ item.emoji }}</span>
+                        </div>
+                        <div class="card-body d-flex flex-column text-center">
+                            <h5 class="card-title item-name">{{ item.name }}</h5>
+                            <p class="card-text item-desc flex-grow-1">{{ item.desc }}</p>
+                            
+                            <div class="item-action-section mt-3">
+                                {% if item.is_equipped %}
+                                <button type="button" class="btn btn-success w-100 action-btn equipped-btn" disabled id="btn-{{ item.id }}">
+                                    ✨ Kullanımda
+                                </button>
+                                {% elif item.is_unlocked %}
+                                <button type="button" class="btn btn-outline-info w-100 action-btn equip-btn" onclick="equipItem('{{ item.id }}')" id="btn-{{ item.id }}">
+                                    Kuşan
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn btn-warning w-100 action-btn buy-btn" onclick="buyItem('{{ item.id }}', {{ item.price }})" id="btn-{{ item.id }}">
+                                    🪙 {{ item.price }} Satın Al
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showNotification(message, isSuccess = true) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${isSuccess ? 'success' : 'danger'} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4`;
+        alertDiv.style.zIndex = '9999';
+        alertDiv.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(alertDiv);
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alertDiv);
+            bsAlert.close();
+        }, 3000);
+    }
+
+    function buyItem(itemId, price) {
+        if (!confirm('Bu eşyayı satın almak istiyor musunuz?')) return;
+
+        fetch("{{ url_for('main.buy_item') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ item_id: itemId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Güncel bakiyeyi güncelle
+                document.getElementById('shop-coins-val').innerText = data.new_coins;
+                
+                // Navbar'daki bakiyeyi güncelle
+                const navCoins = document.getElementById('nav-coins-val');
+                if (navCoins) navCoins.innerText = data.new_coins;
+
+                showNotification(data.message, true);
+
+                // Satın alma butonunu kuşanma butonuna çevir
+                const btn = document.getElementById(`btn-${itemId}`);
+                btn.className = "btn btn-outline-info w-100 action-btn equip-btn";
+                btn.innerText = "Kuşan";
+                btn.onclick = function() { equipItem(itemId); };
+            } else {
+                showNotification(data.message, false);
+            }
+        })
+        .catch(err => {
+            console.error("Satın alma hatası:", err);
+            showNotification("Satın alma sırasında bir hata oluştu.", false);
+        });
+    }
+
+    function equipItem(itemId) {
+        fetch("{{ url_for('main.equip_item') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ item_id: itemId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, true);
+                
+                // Aynı kategorideki diğer eşyaların butonlarını temizle
+                // Bunu kolayca yapmak için tüm eşya listesini kategoriye göre bulup güncelleyebiliriz veya basitçe sayfayı yenileyebiliriz.
+                // Anında yenilemek en temizi ve hatasızıdır, ama arayüzü bozmadan yapmak için reload tetikleyelim.
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showNotification(data.message, false);
+            }
+        })
+        .catch(err => {
+            console.error("Kuşanma hatası:", err);
+            showNotification("Kuşanma sırasında bir hata oluştu.", false);
+        });
+    }
+</script>
+{% endblock %}
